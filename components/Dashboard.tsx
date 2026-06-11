@@ -1,15 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import {
-  Brain,
-  BookOpen,
-  Zap,
-  Files,
-  LogOut,
-  Menu,
-  X,
-} from "lucide-react";
+import { Brain, BookOpen, Zap, Files, LogOut, Menu, X } from "lucide-react";
 import ChatAssistant from "./ChatAssistant";
 import SummariesTab from "./SummariesTab";
 import QuizTab from "./QuizTab";
@@ -25,116 +17,232 @@ export default function Dashboard({ lectureFiles, onBack }: DashboardProps) {
   const [activeTab, setActiveTab] = useState<TabType>("summaries");
   const [chatOpen, setChatOpen] = useState(false);
 
-  const tabs: { key: TabType; label: string; icon: React.ReactNode }[] = [
-    { key: "summaries", label: "Summaries", icon: <BookOpen className="w-4 h-4" /> },
-    { key: "quiz", label: "Quiz", icon: <Zap className="w-4 h-4" /> },
-  ];
-
   return (
-    <div className="min-h-screen flex flex-col">
-      {/* Top Navigation Bar */}
-      <header className="flex-shrink-0 border-b border-white/[0.06] bg-black/20 backdrop-blur-sm sticky top-0 z-30">
-        <div className="flex items-center justify-between px-4 md:px-6 h-14">
+    <div style={{ minHeight: "100vh", display: "flex", flexDirection: "column" }}>
+
+      {/* ── HEADER (sticky, two rows) ── */}
+      <header
+        style={{
+          position: "sticky",
+          top: 0,
+          zIndex: 40,
+          background: "rgba(6,4,15,0.92)",
+          backdropFilter: "blur(16px)",
+          borderBottom: "1px solid rgba(139,92,246,0.18)",
+          flexShrink: 0,
+        }}
+      >
+        {/* Row 1: logo + stats + actions */}
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            padding: "0 24px",
+            height: "52px",
+            borderBottom: "1px solid rgba(255,255,255,0.05)",
+          }}
+        >
           {/* Logo */}
-          <div className="flex items-center gap-2.5">
-            <div className="bg-gradient-to-br from-purple-600 to-blue-500 p-1.5 rounded-lg shadow-lg shadow-purple-500/25">
-              <Brain className="w-4 h-4 text-white" />
+          <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+            <div
+              style={{
+                background: "linear-gradient(135deg,#7c3aed,#3b82f6)",
+                padding: "7px",
+                borderRadius: "10px",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <Brain style={{ width: 16, height: 16, color: "white" }} />
             </div>
-            <span className="text-white font-bold text-sm hidden sm:block">
+            <span style={{ color: "white", fontWeight: 700, fontSize: 14 }}>
               Smart Study Assistant
             </span>
-            <span className="text-white font-bold text-sm sm:hidden">SSA</span>
           </div>
 
-          {/* Center: lecture count */}
-          <div className="hidden md:flex items-center gap-2 bg-white/[0.04] border border-white/[0.07] rounded-lg px-3 py-1.5">
-            <Files className="w-3.5 h-3.5 text-purple-400" />
-            <span className="text-gray-400 text-xs">
-              {lectureFiles.length} lecture{lectureFiles.length !== 1 ? "s" : ""} loaded
+          {/* Center stat */}
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: 6,
+              background: "rgba(255,255,255,0.04)",
+              border: "1px solid rgba(255,255,255,0.08)",
+              borderRadius: 8,
+              padding: "5px 12px",
+            }}
+          >
+            <Files style={{ width: 13, height: 13, color: "#a78bfa" }} />
+            <span style={{ color: "#9ca3af", fontSize: 12 }}>
+              {lectureFiles.length} lectures loaded
             </span>
           </div>
 
-          {/* Right actions */}
-          <div className="flex items-center gap-2">
-            {/* Mobile: chat toggle */}
+          {/* Actions */}
+          <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
             <button
               onClick={() => setChatOpen((v) => !v)}
-              className="lg:hidden btn-ghost px-2.5 py-2 text-xs flex items-center gap-1.5"
+              className="lg:hidden"
+              style={{
+                background: "rgba(139,92,246,0.12)",
+                border: "1px solid rgba(139,92,246,0.25)",
+                color: "#c4b5fd",
+                borderRadius: 8,
+                padding: "6px 12px",
+                fontSize: 12,
+                cursor: "pointer",
+                display: "flex",
+                alignItems: "center",
+                gap: 6,
+              }}
             >
-              {chatOpen ? <X className="w-3.5 h-3.5" /> : <Menu className="w-3.5 h-3.5" />}
-              <span className="hidden sm:inline">Assistant</span>
+              {chatOpen ? <X style={{ width: 13, height: 13 }} /> : <Menu style={{ width: 13, height: 13 }} />}
+              Assistant
             </button>
-
             <button
               onClick={onBack}
-              className="btn-ghost flex items-center gap-1.5 px-3 py-2 text-xs"
+              style={{
+                background: "rgba(139,92,246,0.12)",
+                border: "1px solid rgba(139,92,246,0.25)",
+                color: "#c4b5fd",
+                borderRadius: 8,
+                padding: "6px 14px",
+                fontSize: 12,
+                cursor: "pointer",
+                display: "flex",
+                alignItems: "center",
+                gap: 6,
+              }}
             >
-              <LogOut className="w-3.5 h-3.5" />
-              <span className="hidden sm:inline">Upload New</span>
+              <LogOut style={{ width: 13, height: 13 }} />
+              Upload New
             </button>
           </div>
         </div>
+
+        {/* Row 2: TAB NAVIGATION — always visible */}
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            padding: "0 24px",
+            gap: 4,
+            height: "48px",
+          }}
+        >
+          {(
+            [
+              { key: "summaries" as TabType, label: "Lecture Summaries", icon: <BookOpen style={{ width: 15, height: 15 }} /> },
+              { key: "quiz" as TabType, label: "Quiz  (20 Questions)", icon: <Zap style={{ width: 15, height: 15 }} /> },
+            ] as { key: TabType; label: string; icon: React.ReactNode }[]
+          ).map((tab) => {
+            const active = activeTab === tab.key;
+            return (
+              <button
+                key={tab.key}
+                onClick={() => setActiveTab(tab.key)}
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 7,
+                  padding: "0 20px",
+                  height: "100%",
+                  fontSize: 13,
+                  fontWeight: active ? 700 : 500,
+                  color: active ? "#c4b5fd" : "#6b7280",
+                  background: active ? "rgba(139,92,246,0.12)" : "transparent",
+                  border: "none",
+                  borderBottom: active ? "3px solid #a78bfa" : "3px solid transparent",
+                  borderRadius: "8px 8px 0 0",
+                  cursor: "pointer",
+                  transition: "all 0.18s ease",
+                  whiteSpace: "nowrap",
+                }}
+                onMouseEnter={(e) => {
+                  if (!active) {
+                    (e.currentTarget as HTMLButtonElement).style.color = "#d1d5db";
+                    (e.currentTarget as HTMLButtonElement).style.background = "rgba(255,255,255,0.03)";
+                  }
+                }}
+                onMouseLeave={(e) => {
+                  if (!active) {
+                    (e.currentTarget as HTMLButtonElement).style.color = "#6b7280";
+                    (e.currentTarget as HTMLButtonElement).style.background = "transparent";
+                  }
+                }}
+              >
+                <span style={{ color: active ? "#a78bfa" : "#6b7280" }}>{tab.icon}</span>
+                {tab.label}
+              </button>
+            );
+          })}
+        </div>
       </header>
 
-      {/* Main layout */}
-      <div className="flex-1 flex overflow-hidden">
-        {/* ── Left panel: Chat ── */}
+      {/* ── BODY ── */}
+      <div style={{ flex: 1, display: "flex", overflow: "hidden", position: "relative" }}>
+
+        {/* Left: Chat panel */}
         <aside
-          className={`
-            flex-shrink-0 border-r border-white/[0.06]
-            transition-all duration-300 overflow-hidden
-            /* Mobile: slide-in overlay */
-            lg:relative lg:translate-x-0 lg:w-[280px] xl:w-[300px]
-            ${chatOpen
-              ? "fixed inset-y-14 left-0 z-20 w-[280px] translate-x-0"
-              : "fixed -translate-x-full lg:translate-x-0"
-            }
-            glass-card rounded-none
-          `}
-          style={{ top: "56px", bottom: 0 }}
+          style={{
+            width: 290,
+            flexShrink: 0,
+            borderRight: "1px solid rgba(139,92,246,0.15)",
+            background: "rgba(15,10,40,0.55)",
+            backdropFilter: "blur(16px)",
+            display: "flex",
+            flexDirection: "column",
+            overflow: "hidden",
+          }}
+          className="hidden lg:flex"
         >
           <ChatAssistant lectureFiles={lectureFiles} />
         </aside>
 
-        {/* Mobile overlay backdrop */}
+        {/* Mobile chat overlay */}
         {chatOpen && (
-          <div
-            className="lg:hidden fixed inset-0 bg-black/50 z-10 top-14"
-            onClick={() => setChatOpen(false)}
-          />
+          <>
+            <div
+              onClick={() => setChatOpen(false)}
+              style={{
+                position: "fixed",
+                inset: 0,
+                background: "rgba(0,0,0,0.55)",
+                zIndex: 20,
+              }}
+            />
+            <aside
+              style={{
+                position: "fixed",
+                left: 0,
+                top: 100,
+                bottom: 0,
+                width: 290,
+                zIndex: 30,
+                borderRight: "1px solid rgba(139,92,246,0.2)",
+                background: "rgba(10,6,30,0.97)",
+                backdropFilter: "blur(20px)",
+                display: "flex",
+                flexDirection: "column",
+              }}
+            >
+              <ChatAssistant lectureFiles={lectureFiles} />
+            </aside>
+          </>
         )}
 
-        {/* ── Right panel: Tabs ── */}
-        <main className="flex-1 flex flex-col min-w-0 overflow-hidden">
-          {/* Tab bar */}
-          <div className="flex-shrink-0 px-4 md:px-6 pt-4 pb-0">
-            <div className="flex gap-0 border-b-2 border-purple-900/40">
-              {tabs.map((tab) => (
-                <button
-                  key={tab.key}
-                  onClick={() => setActiveTab(tab.key)}
-                  className={`flex items-center gap-2 px-6 py-3 text-sm font-bold border-b-2 -mb-[2px] transition-all duration-200 ${
-                    activeTab === tab.key
-                      ? "border-purple-400 text-purple-300 bg-purple-500/10"
-                      : "border-transparent text-gray-500 hover:text-gray-200 hover:border-gray-600 hover:bg-white/[0.03]"
-                  }`}
-                >
-                  {tab.icon}
-                  {tab.label}
-                  {tab.key === "quiz" && (
-                    <span className="ml-1 bg-purple-500/25 text-purple-300 text-[10px] font-bold px-1.5 py-0.5 rounded-md border border-purple-500/30">
-                      20 Q
-                    </span>
-                  )}
-                </button>
-              ))}
-            </div>
-          </div>
-
-          {/* Tab content */}
-          <div className="flex-1 overflow-y-auto p-4 md:p-6">
-            {activeTab === "summaries" ? <SummariesTab /> : <QuizTab />}
-          </div>
+        {/* Right: Tab content */}
+        <main
+          style={{
+            flex: 1,
+            overflowY: "auto",
+            padding: "24px",
+            minWidth: 0,
+          }}
+        >
+          {activeTab === "summaries" ? <SummariesTab /> : <QuizTab />}
         </main>
       </div>
     </div>
