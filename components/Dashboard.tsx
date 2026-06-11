@@ -107,20 +107,25 @@ export default function Dashboard({ lectureFiles, onBack }: DashboardProps) {
         {/* ── Right panel: Tabs ── */}
         <main className="flex-1 flex flex-col min-w-0 overflow-hidden">
           {/* Tab bar */}
-          <div className="flex-shrink-0 px-4 md:px-6 py-3 border-b border-white/[0.06] bg-black/10">
-            <div className="flex gap-2">
+          <div className="flex-shrink-0 px-4 md:px-6 pt-4 pb-0">
+            <div className="flex gap-0 border-b-2 border-purple-900/40">
               {tabs.map((tab) => (
                 <button
                   key={tab.key}
                   onClick={() => setActiveTab(tab.key)}
-                  className={`flex items-center gap-2 px-5 py-2.5 text-sm font-semibold rounded-xl transition-all duration-200 ${
+                  className={`flex items-center gap-2 px-6 py-3 text-sm font-bold border-b-2 -mb-[2px] transition-all duration-200 ${
                     activeTab === tab.key
-                      ? "bg-gradient-to-r from-purple-600 to-blue-600 text-white shadow-lg shadow-purple-900/30 border border-purple-500/40"
-                      : "text-gray-400 bg-white/[0.04] border border-white/[0.08] hover:text-white hover:bg-white/[0.08] hover:border-purple-500/30"
+                      ? "border-purple-400 text-purple-300 bg-purple-500/10"
+                      : "border-transparent text-gray-500 hover:text-gray-200 hover:border-gray-600 hover:bg-white/[0.03]"
                   }`}
                 >
                   {tab.icon}
                   {tab.label}
+                  {tab.key === "quiz" && (
+                    <span className="ml-1 bg-purple-500/25 text-purple-300 text-[10px] font-bold px-1.5 py-0.5 rounded-md border border-purple-500/30">
+                      20 Q
+                    </span>
+                  )}
                 </button>
               ))}
             </div>
